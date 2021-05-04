@@ -21,10 +21,10 @@ export default class NavBar extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav ml-auto ">
                         <li className="nav-item">
-                            <NavLink to='/login' className="nav-link" activeClassName="bg-success text-white">Se connecter</NavLink>
+                            <NavLink exact to='/' className="nav-link" activeClassName="bg-success text-white">Accueil</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to='/' className="nav-link" activeClassName="bg-success text-white">Accueil</NavLink>
+                            <NavLink to='/login' className="nav-link" activeClassName="bg-success text-white">Se connecter</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink to='/inscription' className="nav-link" activeClassName="bg-success text-white">Inscription</NavLink>

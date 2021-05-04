@@ -26,7 +26,7 @@ export default class HomeView extends Component {
         const token = localStorage.getItem('token')
         console.log('HomeView.jsx load token : ' + token);
         if (isLoading) return <h1>Loading...</h1>
-        else if (token) return (
+        else if (user) return (
             <div>
                 <h1 className="text-center">{user.username}</h1>
                 <p>{token}</p>

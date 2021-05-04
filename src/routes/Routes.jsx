@@ -16,8 +16,8 @@ export default class Routes extends Component {
     render() {
         return (
             <Switch history={customHistory}>
-                <Route path="/login" component={Connexion}/>
                 <Route exact path="/" component={HomeView}/>
+                <Route path="/login" component={Connexion}/>
                 <Route path="/about" component={AboutView}/>
                 <Route path="/dashboard" component={DashBoardView}/>
                 <Route path="/inscription" component={InscriptionUtilisateur}/>

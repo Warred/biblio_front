@@ -11,11 +11,7 @@ const initialValues = {
     description: '',
     dateAjout: '',
     lEditeur: '',
-    bibliothecaire: '',
-    nombrePage: '',
-    typeDePublication: '',
-    dureeMinutes: '',
-    typeDisque: ''
+    bibliothecaire: ''
 }
 
 const validationSchema = yup.object().shape({
@@ -26,8 +22,12 @@ const validationSchema = yup.object().shape({
 class TestAddDocument extends Component {
 
     state = {
-        typePapier: false,
-        typeDisque: false
+        isPapier: false,
+        isDisque: false,
+        nombrePage: '',
+        typeDePublication: '',
+        dureeMinutes: '',
+        typeDisque: ''
     }
 
     afficheDiv = () => {
@@ -35,14 +35,14 @@ class TestAddDocument extends Component {
         if (radio === 'papier') {
             console.log('type de document = ' + radio);
             this.setState({
-                typePapier: true,
-                typeDisque: false
+                isPapier: true,
+                isDisque: false
             })
         } else if (radio === 'disque') {
             console.log('type de document = ' + radio);
             this.setState({
-                typePapier: false,
-                typeDisque: true
+                isPapier: false,
+                isDisque: true
             })
         }
     }
@@ -53,12 +53,23 @@ class TestAddDocument extends Component {
         values.lEditeur = tmpEdit
         const tmpBibli = JSON.parse(values.bibliothecaire)
         values.bibliothecaire = tmpBibli
-        const {typePapier, typeDisque} = this.state
+        const {isPapier, isDisque} = this.state
         var typeDoc = null
-        if (typePapier) { typeDoc = 'papier'}
-        else if (typeDisque) { typeDoc = 'disque'}
+        if (isPapier) { typeDoc = 'papier'}
+        else if (isDisque) { typeDoc = 'disque'}
+        var typeDePublication = values.typeDePublication
+        var nombrePage = values.nombrePage
+        var typeDisque = values.typeDisque
+        var dureeMinutes = values.dureeMinutes
         console.log(values);
-        apiBiblio.post('/ajoutDocument', values, {params:{typeDoc}})
+        apiBiblio.post('/ajoutDocument', values,
+                {params:{
+                    typeDoc,
+                    typeDePublication,
+                    nombrePage,
+                    typeDisque,
+                    dureeMinutes
+                }})
         .then(resp => {
             console.log(resp);
         })
@@ -113,11 +124,11 @@ class TestAddDocument extends Component {
                                     <Field type="text" name="description" placeholder="description" className="form-control mt-3"/>
                                     <ErrorMessage name="description" component="small" className="text-danger float-end"/>
                                 </div> 
-                                <div className="col-6" style={{display: this.state.typePapier ? 'block' : 'none' }}>
+                                <div className="col-6" style={{display: this.state.isPapier ? 'block' : 'none' }}>
                                     <Field type="text" name="typeDePublication" placeholder="typeDePublication" className="form-control mt-3"/>
                                     <Field type="number" name="nombrePage" placeholder="nombrePage" className="form-control mt-3"/>
                                 </div>
-                                <div className="col-6" style={{display: this.state.typeDisque ? 'block' : 'none' }}>
+                                <div className="col-6" style={{display: this.state.isDisque ? 'block' : 'none' }}>
                                     <Field type="text" name="typeDisque" placeholder="typeDisque" className="form-control mt-3"/>
                                     <Field type="number" name="dureeMinutes" placeholder="dureeMinutes" className="form-control mt-3"/>
                                 </div>
