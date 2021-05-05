@@ -1,35 +1,35 @@
 import React, { Component } from 'react';
-import apiBiblio from './../API/ApiBiblio';
+import apiBiblio from '../../API/ApiBiblio';
 
-class SelectEditeur extends Component {
+class SelectAuteur extends Component {
 
     state = {
-        editeurs: null,
+        auteurs: null,
         isLoading: true
     }
 
     componentDidMount() {
-        apiBiblio.get('/listeEditeurs')
+        apiBiblio.get('/listeAuteurs')
         .then( resp => {
             if (resp.status === 200)
                 this.setState({
-                    editeurs: resp.data,
+                    auteurs: resp.data,
                     isLoading: false
                 })
         })
         .catch( error => console.log(error) ) 
     }
     render() {
-        const {editeurs, isLoading} = this.state
+        const {auteurs, isLoading} = this.state
         if (isLoading) return <option>Loading...</option>
         return (
-                editeurs.map( (editeur, index) => {
-                    let JsonEditeur = JSON.stringify(editeur)
-                    return <option key={index} value={JsonEditeur}>{editeur.nom}</option>
+                auteurs.map( (auteur, index) => {
+                    let JsonAuteur = JSON.stringify(auteur)
+                    return <option key={index} value={JsonAuteur}>{auteur.nom}</option>
                 }
             )
         );
     }
 }
 
-export default SelectEditeur;
+export default SelectAuteur;

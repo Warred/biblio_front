@@ -1,42 +1,27 @@
 import React, { Component } from 'react'
-import apiBiblio from './../API/ApiBiblio';
-
-
 export default class HomeView extends Component {
-    state = { 
-        user: null,
-        isLoading: true
-     }
 
-    componentDidMount() {
-        apiBiblio.get('/account')
-            .then(resp => {
-                console.log(resp);
-                if (resp.status === 200) {
-                    this.setState({
-                        user: resp.data
-                    })
-                } 
-                this.setState({isLoading: false})              
-            })
-            .catch()
+    state = {
+        user: localStorage.getItem('user')
     }
     render() {
-        const {user, isLoading} = this.state
         const token = localStorage.getItem('token')
+        const user = JSON.parse(localStorage.getItem('user'))
         console.log('HomeView.jsx load token : ' + token);
-        if (isLoading) return <h1>Loading...</h1>
-        else if (user) return (
+        if (user) return (
             <div>
-                <h1 className="text-center">{user.username}</h1>
-                <p>{token}</p>
+                <h1>{user.username}</h1>
+                <h2>authorities : {user.authorities}</h2>
+                <div style={{display: ((user.authorities.some(role => (role === 'ROLE_BIBLIOTHECAIRE'))) ? 'block' : 'none') }}>
+                    vous êtes biblio
+                </div>
+                 <div>{user.id}</div>
             </div>
         )
         else return (
             <div>
                 <h1 className="text-center">Veuillez vous connecter</h1>
             </div>
-        )
-        
+        )        
     }
 }

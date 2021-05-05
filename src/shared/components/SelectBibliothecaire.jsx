@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import apiBiblio from './../API/ApiBiblio';
+import apiBiblio from '../../API/ApiBiblio';
 
 class SelectBibliothecaire extends Component {
 

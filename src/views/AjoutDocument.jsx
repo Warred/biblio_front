@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import FormulaireEditeur from './../shared/components/FormulaireEditeur';
+import FormulaireDocument from '../shared/components/FormulaireDocument'
 
-export default class AjoutEditeur extends Component {
+export default class AjoutDocument extends Component {
     render() {
         return (
             <div className="container-fluid">
                 <div className="rows col-md-10 offset-md-1">
                     <div className="justify-content-center">
                         <div className="rows d-flex flex-wrap">
-                        <FormulaireEditeur/>
+                            <FormulaireDocument/>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import LoginUtilisateur from '../shared/components/LoginUtilisateur'
 
 
-export default class InscriptionUtilisateur extends Component {
+export default class Connexion extends Component {
     render() {
         return (
             <div className="container-fluid">
