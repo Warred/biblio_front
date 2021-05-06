@@ -22,14 +22,17 @@ const validationSchema = yup.object().shape({
     description: yup.string().required("champs requis")
 })
 
+
 class FormulaireDocument extends Component {
 
     state = {
         isLoading: true,
+        isLoadingUser: true,
         isPapier: false,
         isDisque: false,
         listeAuteurs: [],
-        selectAuteurs: []
+        selectAuteurs: [],
+        userTmp: null
     }
 
     afficheDiv = () => {
@@ -51,24 +54,24 @@ class FormulaireDocument extends Component {
 
     componentDidMount() {
         apiBiblio.get('/listeAuteurs')
-        .then( resp => {
-            if (resp.status === 200)
-                this.setState({
-                    selectAuteurs: resp.data,
-                    isLoading: false
-                })
-        })
-        .catch( error => console.log(error) ) 
+            .then( resp => {
+                if (resp.status === 200)
+                    this.setState({
+                        selectAuteurs: resp.data,
+                        isLoading: false
+                    })
+            })
+            .catch( error => console.log(error) )
+
     }
 
     
     submit = (values, {resetForm}) => {
-        console.log(values);
-        const user = JSON.parse(localStorage.getItem('user'))
-        if (user) values.bibliothecaire = user
+        
         values.lEditeur = JSON.parse(values.lEditeur)
+        
         values.listeAuteurs = this.state.listeAuteurs
-
+        values.bibliothecaire = JSON.parse(localStorage.getItem('user'))
         var typeDoc = values.typeDoc
         var typeDePublication = values.typeDePublication
         var nombrePage = values.nombrePage
@@ -94,6 +97,7 @@ class FormulaireDocument extends Component {
         var auteur = JSON.parse(document.formulaire.auteur.value)
         var {listeAuteurs, selectAuteurs} = this.state
         listeAuteurs.push(auteur)
+        console.log(listeAuteurs);
         var ind = selectAuteurs.findIndex(aut => aut.id === auteur.id)
         selectAuteurs.splice(ind, 1)
         this.setState({
@@ -103,76 +107,82 @@ class FormulaireDocument extends Component {
     }
 
     render() {
-        const {listeAuteurs, selectAuteurs, isLoading} = this.state
+        const {selectAuteurs, isLoading} = this.state
         return (
             <div className="container card shadow mt-3 p-3">
-                <h3 className="text-center p-2">Ajouter un document</h3>
-                <Formik initialValues={initialValues} onSubmit={this.submit} validationSchema={validationSchema}>
-                    { ( ) => (
-                        <Form name="formulaire">                           
-                            <div className="row">
-                                <div className="col-6"> 
-                                    <span className="p-4">Editeur :</span>
-                                    <Field as="select" name="lEditeur">  
-                                        <option value ="">---choisir un editeur</option>                              
-                                        <SelectEditeur/>
-                                    </Field>
-                                </div>
-                                <div className="col-6"> 
-                                    <span className="p-4">Auteur :</span>
-                                   <Field as="select" name="auteur">
-                                        <option>---choisir un auteur</option> 
+            <h3 className="text-center p-2">Ajouter un document(Bibliothecaire: - Date: )</h3>
+            <Formik initialValues={initialValues} onSubmit={this.submit} validationSchema={validationSchema}>
+                { ( ) => (
+                    <Form name="formulaire">                        
+                            <div className="row col-12">
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12"> 
+                                <span className="p-4">Editeur :</span>
+                                <Field as="select" name="lEditeur">  
+                                    <option value ="">---choisir un editeur</option>                              
+                                    <SelectEditeur/>
+                                </Field>
+                            </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12"> 
+                                <span className="p-4">Auteur :</span>
+                               <Field as="select" name="auteur">
+                                    <option>---choisir un auteur</option> 
 
-                                        {isLoading ? (
-                                             <option>Loading...</option>
-                                        ) : ( selectAuteurs.map( (auteur, index) => {
-                                                let JsonAuteur = JSON.stringify(auteur)
-                                                return <option key={index} value={JsonAuteur}>{auteur.nom}</option>
-                                            })
-                                        )}
-                                    </Field>
-                                    <button className="btn btn-info" type="button" onClick={this.ajouteAuteurs}>Ajouter aux auteurs</button>
+                                    {isLoading ? (
+                                         <option>Loading...</option>
+                                    ) : ( selectAuteurs.map( (auteur, index) => {
+                                            let JsonAuteur = JSON.stringify(auteur)
+                                            return <option key={index} value={JsonAuteur}>{auteur.nom}</option>
+                                        })
+                                    )}
+                                </Field>
+                                <button className="btn btn-info" type="button" onClick={this.ajouteAuteurs}>Ajouter aux auteurs</button>
+                            </div>
+                        </div>
+                        <div className="row mt-4">
+                            <div className="col-lg-12 col-12 col-md-12 col-sm-12 col-xs-12">
+                                <span className="p-4">Choisir le type de document :</span>
+                                <div className="form-check form-check-inline">
+                                    <Field type="radio" onClick={this.afficheDiv} name="typeDoc" value="papier" className="form-check-input"/>
+                                    <label className="form-check-label">Format papier</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <Field type="radio" onClick={this.afficheDiv} name="typeDoc" value="disque" className="form-check-input"/>
+                                    <label className="form-check-label">Disque</label>
                                 </div>
                             </div>
-                            <div className="row mt-4">
-                                <div className="col-6">
-                                    <span className="p-4">Choisir le type de document :</span>
-                                    <div className="form-check form-check-inline">
-                                        <Field type="radio" onClick={this.afficheDiv} name="typeDoc" value="papier" className="form-check-input"/>
-                                        <label className="form-check-label">Format papier</label>
-                                    </div>
-                                    <div className="form-check form-check-inline">
-                                        <Field type="radio" onClick={this.afficheDiv} name="typeDoc" value="disque" className="form-check-input"/>
-                                        <label className="form-check-label">Disque</label>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <Field type="date" name="dateAjout" className="form-control"/>
-                                </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12">
+                                <Field type="text" name="nom" placeholder="Titre" className="form-control mt-3"/>
+                                <ErrorMessage name="nom" component="small" className="text-danger float-end"/>
                             </div>
-                            <div className="row">
-                                <div className="col-6">
-                                    <Field type="text" name="nom" placeholder="nom" className="form-control mt-3"/>
-                                    <ErrorMessage name="nom" component="small" className="text-danger float-end"/>
-                                    <Field type="text" name="description" placeholder="description" className="form-control mt-3"/>
-                                    <ErrorMessage name="description" component="small" className="text-danger float-end"/>
-                                </div> 
-                                <div className="col-6" style={{display: this.state.isPapier ? 'block' : 'none' }}>
-                                    <Field type="text" name="typeDePublication" placeholder="typeDePublication" className="form-control mt-3"/>
-                                    <Field type="number" name="nombrePage" placeholder="nombrePage" className="form-control mt-3"/>
-                                </div>
-                                <div className="col-6" style={{display: this.state.isDisque ? 'block' : 'none' }}>
-                                    <Field type="text" name="typeDisque" placeholder="typeDisque" className="form-control mt-3"/>
-                                    <Field type="number" name="dureeMinutes" placeholder="dureeMinutes" className="form-control mt-3"/>
-                                </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12">
+                                <Field type="date" name="dateAjout" className="form-control mt-3"/>
+                            </div> 
+                            <div className="col-lg-12 col-12 col-md-12 col-sm-12 col-xs-12">
+                            <Field type="text" as="textarea"  name="description" placeholder="Description" className="form-control mt-3"/>
+                                <ErrorMessage name="description" component="small" className="text-danger float-end"/>
                             </div>
-                            <div className="row m-0 mt-4">
-                                <button type="submit" className="btn btn-success btn-block">Ajouter le document</button>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12" style={{display: this.state.isPapier ? 'block' : 'none' }}>
+                                <Field type="text" name="typeDePublication" placeholder="Type De Publication" className="form-control mt-3"/>
                             </div>
-                        </Form>
-                    ) }                    
-                </Formik>
-            </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12" style={{display: this.state.isPapier ? 'block' : 'none' }}>
+                                <Field type="number" name="nombrePage" placeholder="Nombre de Page" className="form-control mt-3"/>
+                            </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12" style={{display: this.state.isDisque ? 'block' : 'none' }}>
+                                <Field type="text" name="typeDisque" placeholder="Type de Disque" className="form-control mt-3"/>
+                            </div>
+                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12" style={{display: this.state.isDisque ? 'block' : 'none' }}>
+                                <Field type="number" name="dureeMinutes" placeholder="DurÃ©e en minutes" className="form-control mt-3"/>
+                            </div>
+                        </div>
+                        <div className="row m-0 mt-4">
+                            <button type="submit" className="btn btn-success btn-block">Ajouter le document</button>
+                        </div>
+                    </Form>
+                ) }                    
+            </Formik>
+        </div>
         );
     }
 }
