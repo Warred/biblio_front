@@ -16,6 +16,7 @@ export default class HomeView extends Component {
                     vous êtes biblio
                 </div>
                  <div>{user.id}</div>
+                 <div>includes = {(user.authorities.some(role => (role === 'ROLE_BIBLIOTHECAIRE'))) ? 'true' : 'false'}</div>
             </div>
         )
         else return (

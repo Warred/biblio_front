@@ -28,16 +28,15 @@ class LoginUtilisateur extends Component {
                     }
                 })                
                 resetForm()
+                window.location.replace('/')
             }
-        })        
+        })       
     }
 
     render() {
         const token = localStorage.getItem('token')
         if (token) {
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            console.log('LoginUtilisateur.jsx : token and user deleted in localStorage');
+            return <h3>Vous êtes déjà connecté !</h3>
         }
         return (
             <div className="container card shadow mt-3 p-3">

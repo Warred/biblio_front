@@ -25,7 +25,8 @@ class FormulaireEmprunteur extends Component {
         .then(resp => {
             console.log(resp);
         })        
-        resetForm()      
+        resetForm()
+        window.location.replace('/login')
     }
 
     render() {
