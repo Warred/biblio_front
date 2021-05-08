@@ -27,7 +27,7 @@ class FormulaireDocument extends Component {
 
     state = {
         isLoading: true,
-        isLoadingUser: true,
+        isLoading2: true,
         isPapier: false,
         isDisque: false,
         listeAuteurs: [],
@@ -93,6 +93,18 @@ class FormulaireDocument extends Component {
         })
     }
 
+    deleteAuteurs = () => {
+        var auteur = JSON.parse(document.formulaire.auteurSelected.value)
+        var {listeAuteurs, selectAuteurs} = this.state
+        selectAuteurs.push(auteur)
+        var ind = listeAuteurs.findIndex(aut => aut.id === auteur.id)
+        listeAuteurs.splice(ind, 1)
+        this.setState({
+            selectAuteurs: selectAuteurs,
+            listeAuteurs: listeAuteurs
+        })
+    }
+
     ajouteAuteurs = () => {
         var auteur = JSON.parse(document.formulaire.auteur.value)
         var {listeAuteurs, selectAuteurs} = this.state
@@ -107,7 +119,7 @@ class FormulaireDocument extends Component {
     }
 
     render() {
-        const {selectAuteurs, isLoading} = this.state
+        const {listeAuteurs, selectAuteurs, isLoading} = this.state
         return (
             <div className="container card shadow mt-3 p-3">
             <h3 className="text-center p-2">Ajouter un document(Bibliothecaire: - Date: )</h3>
@@ -115,15 +127,15 @@ class FormulaireDocument extends Component {
                 { ( ) => (
                     <Form name="formulaire">                        
                             <div className="row col-12">
-                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12"> 
-                                <span className="p-4">Editeur :</span>
+                            <div className="col-lg-4 col-4 col-md-12 col-sm-12 col-xs-12"> 
+                                <p className="p-1">Editeur :</p>
                                 <Field as="select" name="lEditeur">  
                                     <option value ="">---choisir un editeur</option>                              
                                     <SelectEditeur/>
                                 </Field>
                             </div>
-                            <div className="col-lg-6 col-6 col-md-12 col-sm-12 col-xs-12"> 
-                                <span className="p-4">Auteur :</span>
+                            <div className="col-lg-4 col-4 col-md-12 col-sm-12 col-xs-12"> 
+                                <p className="p-1">Auteur :</p>
                                <Field as="select" name="auteur">
                                     <option>---choisir un auteur</option> 
 
@@ -135,7 +147,19 @@ class FormulaireDocument extends Component {
                                         })
                                     )}
                                 </Field>
-                                <button className="btn btn-info" type="button" onClick={this.ajouteAuteurs}>Ajouter aux auteurs</button>
+                                <button className="btn btn-info p-1 m-2" type="button" onClick={this.ajouteAuteurs}>Ajouter aux auteurs</button>
+                            </div>
+                            <div className="col-lg-4 col-4 col-md-12 col-sm-12 col-xs-12"> 
+                                <p className="p-1">Auteur ajoutés:</p>
+                               <Field as="select" name="auteurSelected">
+                                    <option>---retirer un auteur</option> 
+                                    {listeAuteurs.map( (auteur, index) => {
+                                            let JsonAuteur = JSON.stringify(auteur)
+                                            return <option key={index} value={JsonAuteur}>{auteur.nom}</option>
+                                        })
+                                    }
+                                </Field>
+                                <button className="btn btn-info p-1 m-2" type="button" onClick={this.deleteAuteurs}>Retirer des auteurs</button>
                             </div>
                         </div>
                         <div className="row mt-4">

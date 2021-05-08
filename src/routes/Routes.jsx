@@ -9,6 +9,7 @@ import InscriptionEmprunteur from './../views/InscriptionEmprunteur';
 import InscriptionBibliothecaire from './../views/InscriptionBibliothecaire';
 import AjoutAuteur from './../views/AjoutAuteur';
 import AjoutDocument from './../views/AjoutDocument';
+import ListeDocuments from './../shared/components/ListeDocuments';
 
 
 const customHistory = createBrowserHistory()
@@ -24,6 +25,7 @@ export default class Routes extends Component {
                 <Route path="/ajout/Editeur" component={AjoutEditeur}/>
                 <Route path="/ajout/Auteur" component={AjoutAuteur}/>
                 <Route path="/ajout/Document" component={AjoutDocument}/>
+                <Route path="/listeDocuments" component={ListeDocuments}/>
                 <Route component={ErrorView}/>
             </Switch>
         )
