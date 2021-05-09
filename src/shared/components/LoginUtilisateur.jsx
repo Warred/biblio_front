@@ -26,7 +26,7 @@ class LoginUtilisateur extends Component {
                         localStorage.setItem('user', JSON.stringify(resp.data))
                         console.log('user: ' + resp.data.username + ' saved in localStorage << Login succes');
                     }
-                })                
+                })             
                 resetForm()
                 window.location.replace('/')
             }

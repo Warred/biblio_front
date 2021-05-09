@@ -103,7 +103,7 @@ class ListeDocuments extends Component {
                 {listDoc.map( (document, index) => {
                     console.log(document)
                     const idDoc = document.id
-                    return <><tr key={index}>
+                    return <React.Fragment key={index}><tr>
                         <td>{document.nombrePage ? 'Papier' : ''}{document.dureeMinutes ? 'Disque' : ''}</td>
                         <td>{document.nom}</td>
                         <td>{document.nombrePage ? document.nombrePage + ' pages' : ''}{document.dureeMinutes ? document.dureeMinutes +' minutes' : ''}</td>
@@ -137,7 +137,7 @@ class ListeDocuments extends Component {
                         </td>
                     </tr><tr></tr>
                     <tr><td className="text-right"></td><td colSpan="3"><b>Description :</b> <i>{document.description}</i></td></tr>
-                    </>
+                    </React.Fragment>
                 })}
                 </tbody>
             </table>

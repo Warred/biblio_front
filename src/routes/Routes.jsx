@@ -28,7 +28,6 @@ export default class Routes extends Component {
         if (token) {
             apiBiblio.get('/account')
                 .then(resp => {
-                    console.log(resp);
                     if (resp.status === 200) {
                         this.setState({
                             user: resp.data,
