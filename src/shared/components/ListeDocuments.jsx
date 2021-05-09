@@ -48,7 +48,7 @@ class ListeDocuments extends Component {
        
     }
     
-    restituer = (idDoc) => {
+    restitue = (idDoc) => {
         const user = JSON.parse(localStorage.getItem('user'))
         const url = '/rendreDocument/' + user.username + '/' + idDoc
         console.log(url);
@@ -64,6 +64,22 @@ class ListeDocuments extends Component {
             })
             .catch( error => console.log(error) )
         })        
+    }
+
+    efface = (idDoc) => {
+        const url = '/effaceDocument/' + idDoc
+        apiBiblio.delete(url)
+        .then(resp => {
+            console.log(resp);
+            apiBiblio.get('/listeDocuments')
+            .then( resp => {
+                if (resp.status === 200)
+                    this.setState({
+                        listDoc: resp.data,
+                    })
+            })
+            .catch( error => console.log(error) )
+        })
     }
 
     render() {
@@ -97,7 +113,7 @@ class ListeDocuments extends Component {
                                 (document.emprunteur.id === user.id) ?
                                     <button 
                                         className="btn btn-warning p-0 m-0"
-                                        type="button" onClick={() => this.restituer(idDoc)}>
+                                        type="button" onClick={() => this.restitue(idDoc)}>
                                             Restituer
                                     </button>
                                     : 'Non disponible'
@@ -109,11 +125,18 @@ class ListeDocuments extends Component {
                                     type="button" onClick={() => this.emprunte(idDoc)}>
                                         Emprunter
                                 </button>
+                                : ( user.authorities.some(role => (role === 'ROLE_BIBLIOTHECAIRE'))
+                                    && (!document.emprunteur) ) ?
+                                <button
+                                    className="btn btn-danger p-0 m-0"
+                                    type="button" onClick={() => this.efface(idDoc)}>
+                                        Effacer
+                                </button>
                                 : 'Disponible'
                             }
                         </td>
                     </tr><tr></tr>
-                    <tr><td className="text-right"></td><td colSpan="3">Description : <i>{document.description}</i></td></tr>
+                    <tr><td className="text-right"></td><td colSpan="3"><b>Description :</b> <i>{document.description}</i></td></tr>
                     </>
                 })}
                 </tbody>
