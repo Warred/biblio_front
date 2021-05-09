@@ -34,10 +34,18 @@ class ListeDocuments extends Component {
         const url = '/emprunteDocument/' + user.username + '/' + idDoc
         console.log(url);
         apiBiblio.put(url)
-            .then(resp => {
-                console.log(resp);
+        .then(resp => {
+            console.log(resp);
+            apiBiblio.get('/listeDocuments')
+            .then( resp => {
+                if (resp.status === 200)
+                    this.setState({
+                        listDoc: resp.data,
+                    })
             })
-        window.location.reload()
+            .catch( error => console.log(error) )
+        })
+       
     }
     
     restituer = (idDoc) => {
@@ -47,8 +55,15 @@ class ListeDocuments extends Component {
         apiBiblio.put(url)
         .then(resp => {
             console.log(resp);
-        })
-        window.location.reload()
+            apiBiblio.get('/listeDocuments')
+            .then( resp => {
+                if (resp.status === 200)
+                    this.setState({
+                        listDoc: resp.data,
+                    })
+            })
+            .catch( error => console.log(error) )
+        })        
     }
 
     render() {
@@ -61,18 +76,23 @@ class ListeDocuments extends Component {
             <table className="table table-striped">
                 <thead className="thead-light">
                     <tr>
+                    <th>Type</th>
                     <th>Nom du document</th>
+                    <th>Taille</th>
                     <th>Editeur</th>
-                    <th>Disponible ?</th>
+                    <th className="text-center">Disponible ?</th>
                     </tr>
                 </thead>
                 <tbody>
                 {listDoc.map( (document, index) => {
                     console.log(document)
                     const idDoc = document.id
-                    return <tr key={index}>
-                        <td>{document.nom}</td><td>{document.lEditeur.nom}</td>
-                        <td>
+                    return <><tr key={index}>
+                        <td>{document.nombrePage ? 'Papier' : ''}{document.dureeMinutes ? 'Disque' : ''}</td>
+                        <td>{document.nom}</td>
+                        <td>{document.nombrePage ? document.nombrePage + ' pages' : ''}{document.dureeMinutes ? document.dureeMinutes +' minutes' : ''}</td>
+                        <td>{document.lEditeur.nom}</td>
+                        <td rowSpan="3" className="align-middle text-center">
                             {(document.emprunteur) ? 
                                 (document.emprunteur.id === user.id) ?
                                     <button 
@@ -92,7 +112,9 @@ class ListeDocuments extends Component {
                                 : 'Disponible'
                             }
                         </td>
-                    </tr>
+                    </tr><tr></tr>
+                    <tr><td className="text-right"></td><td colSpan="3">Description : <i>{document.description}</i></td></tr>
+                    </>
                 })}
                 </tbody>
             </table>
